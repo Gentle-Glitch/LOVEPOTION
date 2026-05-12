@@ -2,181 +2,959 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💘 러브 포션 대폭발 — 해독제를 찾아라!</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Noto+Serif+KR:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Nanum+Myeongjo:wght@400;700&display=swap');
+  :root {
+    --rose:      #c4415a;
+    --rose-dark: #8b1a2f;
+    --rose-pale: #f7cfd8;
+    --gold:      #d4a843;
+    --gold-light:#f5d98e;
+    --ink:       #1a0a10;
+    --parchment: #f5ead8;
+    --parchment2:#ede0c4;
+    --shadow:    rgba(26,10,16,0.7);
+    --glow:      rgba(196,65,90,0.45);
+    --mist:      rgba(245,215,220,0.13);
+  }
 
-    body {
-        background: #1a0f0f;
-        color: #e0c39a;
-        font-family: 'Nanum+Myeongjo', serif;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .game-container {
-        width: 100%;
-        max-width: 900px;
-        background: #2d1b1b;
-        border: 4px double #8b5a2b;
-        padding: 30px;
-        box-shadow: 0 0 60px rgba(255, 20, 147, 0.4);
-    }
+  html { scroll-behavior: smooth; }
 
-    h1 {
-        font-family: 'Cinzel', serif;
-        text-align: center;
-        color: #ff1493;
-        text-shadow: 2px 2px 4px #000;
-        border-bottom: 2px solid #8b5a2b;
-        padding-bottom: 15px;
-        letter-spacing: 3px;
-    }
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23c4415a' d='M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z'/%3E%3C/svg%3E") 12 12, auto;
+  }
 
-    /* 지도 레이아웃 */
-    .map-wrapper {
-        position: relative;
-        width: 100%;
-        height: 500px;
-        background: radial-gradient(circle, #4a2f2f 0%, #1a0f0f 100%);
-        border: 2px solid #8b5a2b;
-        margin: 20px 0;
-        border-radius: 10px;
-        overflow: hidden;
-    }
+  /* ── Noise texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .35;
+  }
 
-    /* 거점 스타일 */
-    .poi {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        background: rgba(255, 20, 147, 0.3);
-        border: 2px solid #ff1493;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        transition: 0.3s;
-        box-shadow: 0 0 15px #ff1493;
-    }
+  /* ── Floating hearts bg ── */
+  .hearts-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .hb {
+    position: absolute; bottom: -60px; font-size: 1.4rem; opacity: 0;
+    animation: floatUp var(--dur, 8s) ease-in var(--delay, 0s) infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(var(--rot,0deg)) scale(.7); opacity: 0; }
+    10%  { opacity: .4; }
+    90%  { opacity: .15; }
+    100% { transform: translateY(-110vh) rotate(calc(var(--rot,0deg) + 30deg)) scale(1.1); opacity: 0; }
+  }
 
-    .poi:hover {
-        transform: scale(1.3);
-        background: #ff1493;
-        z-index: 10;
-    }
+  /* ── Header ── */
+  header {
+    position: relative; z-index: 10;
+    text-align: center; padding: 3.5rem 1rem 2.5rem;
+    border-bottom: 2px solid var(--rose-dark);
+    background: linear-gradient(180deg, #2a0810 0%, transparent 100%);
+  }
+  .crest {
+    font-size: 3rem; margin-bottom: .5rem;
+    filter: drop-shadow(0 0 12px var(--glow));
+    animation: pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
 
-    /* 던전 위치 (상대적 배치) */
-    #dungeon1 { top: 15%; left: 15%; } /* 얼음 동굴 */
-    #dungeon2 { top: 15%; right: 15%; } /* 수도원 */
-    #dungeon3 { bottom: 25%; left: 20%; } /* 덩굴 숲 */
-    #dungeon4 { bottom: 15%; right: 15%; } /* 마왕성 */
-    #home { top: 45%; left: 45%; background: #8b5a2b; border-color: #fff; box-shadow: 0 0 15px #fff; } /* 공방 */
-    #spa { bottom: 40%; right: 35%; } /* 온천 */
-    #buffet { top: 40%; left: 25%; } /* 뷔페 */
+  header h1 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold-light), 0 2px 4px #000;
+    letter-spacing: .04em;
+    line-height: 1.25;
+  }
+  header h1 span { color: var(--rose); }
 
-    /* 설명 팝업 */
-    #desc-panel {
-        background: #1e1111;
-        border: 1px solid #ff1493;
-        padding: 20px;
-        min-height: 100px;
-        margin-top: 20px;
-    }
+  .subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--rose-pale);
+    font-size: 1.05rem;
+    margin-top: .6rem;
+    opacity: .85;
+  }
 
-    .desc-title {
-        color: #f1c40f;
-        font-size: 1.2em;
-        font-weight: bold;
-        margin-bottom: 10px;
-        display: block;
-        font-family: 'Cinzel', serif;
-    }
+  /* ── Section titles ── */
+  .sec-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: .08em;
+    margin-bottom: 1.8rem;
+    position: relative;
+  }
+  .sec-title::before, .sec-title::after {
+    content: '✦';
+    color: var(--rose);
+    margin: 0 .7rem;
+    opacity: .7;
+  }
 
-    .desc-body {
-        line-height: 1.6;
-        color: #d2b48c;
-    }
+  /* ── Layout containers ── */
+  .container {
+    max-width: 1100px; margin: 0 auto; padding: 0 1.2rem;
+    position: relative; z-index: 5;
+  }
+  section { padding: 3rem 0; }
+  .divider {
+    height: 1px; margin: .5rem 0;
+    background: linear-gradient(90deg, transparent, var(--rose-dark), var(--gold), var(--rose-dark), transparent);
+  }
 
-    .map-legend {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-bottom: 10px;
-        font-size: 0.8em;
-    }
+  /* ── STAT BARS ── */
+  .stats-row {
+    display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+  .stat-card {
+    background: linear-gradient(135deg, rgba(139,26,47,.35), rgba(26,10,16,.8));
+    border: 1px solid var(--rose-dark);
+    border-radius: 8px; padding: 1rem 1.5rem;
+    min-width: 200px; flex: 1;
+    box-shadow: 0 4px 24px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .stat-label {
+    font-size: .75rem; letter-spacing: .12em; color: var(--rose-pale);
+    text-transform: uppercase; margin-bottom: .5rem;
+  }
+  .stat-bar-bg {
+    height: 10px; border-radius: 5px;
+    background: rgba(255,255,255,.07);
+    overflow: hidden; position: relative;
+  }
+  .stat-bar-fill {
+    height: 100%; border-radius: 5px;
+    background: linear-gradient(90deg, var(--rose-dark), var(--rose), #ff9ab0);
+    transition: width .6s ease;
+    box-shadow: 0 0 8px var(--glow);
+  }
+  .stat-bar-fill.gold-fill {
+    background: linear-gradient(90deg, #8b6914, var(--gold), var(--gold-light));
+    box-shadow: 0 0 8px rgba(212,168,67,.5);
+  }
+  .stat-value { font-size: .85rem; color: var(--gold-light); margin-top: .35rem; text-align: right; }
+
+  /* ── CHARACTER CARDS ── */
+  .chars-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.4rem;
+  }
+  .char-card {
+    position: relative;
+    background: linear-gradient(155deg, rgba(42,8,16,.9) 0%, rgba(15,5,10,.95) 100%);
+    border: 1px solid rgba(196,65,90,.35);
+    border-radius: 12px; overflow: hidden;
+    transition: transform .3s ease, box-shadow .3s ease;
+    cursor: default;
+  }
+  .char-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.6), 0 0 30px var(--glow);
+    border-color: var(--rose);
+  }
+  .char-card-accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .char-card-accent.gold { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .char-card-accent.red  { background: linear-gradient(90deg, transparent, #8b0000, var(--rose), transparent); }
+  .char-card-accent.stone{ background: linear-gradient(90deg, transparent, #8a8a8a, #e0e0e0, transparent); }
+  .char-card-accent.pink { background: linear-gradient(90deg, transparent, var(--rose), #ffb3c6, transparent); }
+
+  .char-card-body { padding: 1.4rem 1.4rem 1.2rem; }
+  .char-emoji { font-size: 2.6rem; margin-bottom: .5rem; display: block; }
+  .char-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.1rem; color: var(--gold); margin-bottom: .15rem;
+  }
+  .char-tag {
+    display: inline-block; font-size: .7rem;
+    background: rgba(196,65,90,.2); border: 1px solid rgba(196,65,90,.4);
+    color: var(--rose-pale); border-radius: 20px;
+    padding: .15rem .7rem; letter-spacing: .06em; margin-bottom: .8rem;
+  }
+  .char-stats { display: flex; gap: .8rem; margin-bottom: .9rem; flex-wrap: wrap; }
+  .char-stat-pill {
+    font-size: .72rem; padding: .2rem .65rem;
+    background: rgba(255,255,255,.05); border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.1); color: #ddd;
+  }
+  .char-quote {
+    font-family: 'IM Fell English', serif; font-style: italic;
+    color: var(--rose-pale); font-size: .88rem;
+    border-left: 2px solid var(--rose-dark); padding-left: .8rem;
+    margin-bottom: .9rem; line-height: 1.55;
+  }
+  .char-desc { font-size: .82rem; color: #c4a0a8; line-height: 1.6; }
+  .char-desc li { margin: .3rem 0 .3rem 1rem; }
+
+  /* ── SKILL BOX ── */
+  .skill-box {
+    background: rgba(196,65,90,.08); border: 1px solid rgba(196,65,90,.25);
+    border-radius: 8px; padding: .9rem 1.1rem; margin-top: .9rem;
+  }
+  .skill-title { font-size: .72rem; letter-spacing: .1em; color: var(--rose); text-transform: uppercase; margin-bottom: .4rem; }
+  .skill-effect { font-size: .8rem; color: #dbbec5; line-height: 1.5; }
+
+  /* ── MAP SECTION ── */
+  .map-wrapper {
+    position: relative;
+    border: 2px solid var(--rose-dark);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 0 40px rgba(196,65,90,.2), inset 0 0 60px rgba(0,0,0,.5);
+  }
+  .map-bg {
+    width: 100%; min-height: 520px;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(100,30,50,.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(40,10,60,.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(26,10,16,1) 0%, #0d0408 100%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0; padding: 2rem;
+    align-items: center; justify-items: center;
+    position: relative;
+  }
+
+  /* Grid lines */
+  .map-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(196,65,90,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(196,65,90,.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* compass rose */
+  .compass {
+    position: absolute; bottom: 1.2rem; right: 1.4rem;
+    font-size: 2.5rem; opacity: .18; pointer-events: none;
+    animation: spin 30s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MAP NODES ── */
+  .map-node {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer;
+    transition: transform .25s ease;
+    z-index: 2;
+  }
+  .map-node:hover { transform: scale(1.08); }
+  .map-node:hover .node-ring { opacity: 1; transform: scale(1.15); }
+
+  .node-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; position: relative;
+    border: 2px solid;
+    transition: box-shadow .3s ease;
+  }
+  .map-node:hover .node-icon {
+    box-shadow: 0 0 28px var(--node-glow, var(--glow));
+  }
+
+  .node-ring {
+    position: absolute; inset: -8px; border-radius: 50%;
+    border: 1px dashed; opacity: .3;
+    transition: opacity .3s, transform .3s;
+    animation: rotate 8s linear infinite;
+  }
+  @keyframes rotate { to { transform: rotate(360deg) scale(1); } }
+
+  .node-label {
+    margin-top: .55rem; font-size: .8rem;
+    font-family: 'Cinzel Decorative', cursive;
+    color: var(--gold-light); text-align: center;
+    text-shadow: 0 1px 6px #000;
+    max-width: 120px; line-height: 1.3;
+  }
+  .node-sublabel {
+    font-size: .68rem; color: var(--rose-pale); opacity: .75;
+    margin-top: .2rem; text-align: center;
+  }
+
+  /* individual node colors */
+  .node-ice    .node-icon { background: radial-gradient(circle, #1a3a5c, #0a1a2e); border-color: #5ba3d4; --node-glow: rgba(91,163,212,.5); }
+  .node-ice    .node-ring { border-color: #5ba3d4; }
+  .node-abbey  .node-icon { background: radial-gradient(circle, #2a2040, #10082a); border-color: #9b59b6; --node-glow: rgba(155,89,182,.5); }
+  .node-abbey  .node-ring { border-color: #9b59b6; }
+  .node-forest .node-icon { background: radial-gradient(circle, #1a3820, #080f0a); border-color: #4caf50; --node-glow: rgba(76,175,80,.5); }
+  .node-forest .node-ring { border-color: #4caf50; }
+  .node-castle .node-icon { background: radial-gradient(circle, #3a0a10, #1a0408); border-color: var(--rose); --node-glow: var(--glow); }
+  .node-castle .node-ring { border-color: var(--rose); }
+  .node-knight .node-icon { background: radial-gradient(circle, #1a2840, #080e1a); border-color: #4a90d9; --node-glow: rgba(74,144,217,.5); }
+  .node-knight .node-ring { border-color: #4a90d9; }
+  .node-town   .node-icon { background: radial-gradient(circle, #3a1828, #1a080e); border-color: var(--gold); --node-glow: rgba(212,168,67,.5); }
+  .node-town   .node-ring { border-color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,3,7,.82); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s ease;
+    padding: 1rem;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: linear-gradient(155deg, #1e0810 0%, #0d0408 100%);
+    border: 1px solid var(--rose-dark);
+    border-radius: 16px; max-width: 540px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,.8), 0 0 60px var(--glow);
+    transform: scale(.94) translateY(20px);
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    position: relative;
+  }
+  .modal-overlay.open .modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(196,65,90,.2);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem;
+  }
+  .modal-icon { font-size: 2.8rem; line-height: 1; }
+  .modal-title-block { flex: 1; }
+  .modal-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.15rem; color: var(--gold);
+    text-shadow: 0 0 12px rgba(212,168,67,.4);
+    margin-bottom: .3rem;
+  }
+  .modal-subtitle { font-size: .8rem; color: var(--rose-pale); opacity: .8; }
+  .modal-close {
+    background: none; border: none; color: var(--rose-pale);
+    font-size: 1.5rem; cursor: pointer; opacity: .6;
+    transition: opacity .2s; flex-shrink: 0; padding: .2rem;
+  }
+  .modal-close:hover { opacity: 1; color: var(--rose); }
+
+  .modal-body { padding: 1.2rem 1.5rem 1.5rem; }
+  .modal-section { margin-bottom: 1.3rem; }
+  .modal-section-title {
+    font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  .modal-section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(196,65,90,.4), transparent);
+  }
+  .modal-text { font-size: .88rem; color: #d4b8c0; line-height: 1.7; }
+
+  .modal-reward {
+    background: rgba(212,168,67,.1); border: 1px solid rgba(212,168,67,.25);
+    border-radius: 8px; padding: .8rem 1rem;
+    display: flex; align-items: center; gap: .8rem;
+  }
+  .modal-reward-icon { font-size: 1.6rem; }
+  .modal-reward-text { font-size: .85rem; }
+  .modal-reward-label { color: var(--gold-light); font-weight: 600; }
+  .modal-reward-sub { color: #c4a060; font-size: .78rem; opacity: .85; }
+
+  .modal-ingredient {
+    background: rgba(196,65,90,.1); border: 1px solid rgba(196,65,90,.25);
+    border-radius: 8px; padding: .8rem 1rem;
+    display: flex; align-items: center; gap: .8rem; margin-bottom: .7rem;
+  }
+  .modal-ingredient-icon { font-size: 1.6rem; }
+  .modal-ingredient-text { font-size: .85rem; }
+  .modal-ingredient-label { color: var(--rose-pale); font-weight: 600; }
+  .modal-ingredient-sub { color: #c49098; font-size: .78rem; opacity: .85; }
+
+  .modal-tag {
+    display: inline-block; font-size: .7rem;
+    padding: .2rem .7rem; border-radius: 20px; margin: .2rem .2rem 0 0;
+    border: 1px solid;
+  }
+  .modal-tag.danger { background: rgba(139,26,47,.2); border-color: rgba(139,26,47,.5); color: #ffb3b3; }
+  .modal-tag.info   { background: rgba(74,144,217,.1); border-color: rgba(74,144,217,.35); color: #a8d0ff; }
+  .modal-tag.nature { background: rgba(76,175,80,.1); border-color: rgba(76,175,80,.35); color: #a8e6a8; }
+  .modal-tag.gold   { background: rgba(212,168,67,.1); border-color: rgba(212,168,67,.35); color: #f5d98e; }
+  .modal-tag.purple { background: rgba(155,89,182,.1); border-color: rgba(155,89,182,.35); color: #d4a8ff; }
+
+  /* ── ITEMS / NOTES ── */
+  .items-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+  }
+  .item-card {
+    background: rgba(26,10,16,.7); border: 1px solid rgba(196,65,90,.2);
+    border-radius: 10px; padding: 1rem 1.1rem;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .item-card:hover { border-color: rgba(196,65,90,.5); box-shadow: 0 4px 20px rgba(196,65,90,.15); }
+  .item-icon { font-size: 1.8rem; margin-bottom: .5rem; display: block; }
+  .item-name { font-size: .85rem; color: var(--gold-light); font-weight: 600; margin-bottom: .3rem; }
+  .item-desc { font-size: .78rem; color: #b8929a; line-height: 1.5; }
+
+  /* ── SECRETS ── */
+  .secrets-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+  }
+  .secret-card {
+    background: rgba(10,3,7,.8); border: 1px dashed rgba(196,65,90,.25);
+    border-radius: 10px; padding: 1.1rem;
+    text-align: center; transition: border-color .25s, background .25s;
+    cursor: default;
+  }
+  .secret-card:hover { background: rgba(26,10,16,.9); border-color: rgba(196,65,90,.5); }
+  .secret-icon { font-size: 2rem; margin-bottom: .6rem; display: block; filter: grayscale(.5); }
+  .secret-label { font-size: .75rem; letter-spacing: .1em; color: var(--rose); text-transform: uppercase; margin-bottom: .4rem; }
+  .secret-text { font-size: .82rem; color: #c4a0a8; line-height: 1.5; }
+
+  /* ── WARNING BOX ── */
+  .warning-box {
+    background: linear-gradient(135deg, rgba(139,26,47,.2), rgba(26,10,16,.8));
+    border: 1px solid rgba(196,65,90,.4);
+    border-radius: 10px; padding: 1.2rem 1.4rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .warning-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .warning-title { font-size: .82rem; letter-spacing: .08em; color: var(--rose); text-transform: uppercase; margin-bottom: .35rem; }
+  .warning-text { font-size: .84rem; color: #d4a0a8; line-height: 1.6; }
+
+  /* ── Timer bar ── */
+  .timer-section {
+    background: linear-gradient(135deg, rgba(26,10,16,.95), rgba(42,8,16,.9));
+    border: 1px solid rgba(212,168,67,.3);
+    border-radius: 12px; padding: 1.3rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .timer-label { font-size: .75rem; letter-spacing: .1em; color: var(--gold); text-transform: uppercase; margin-bottom: .6rem; }
+  .timer-days { display: flex; gap: .4rem; }
+  .day-pip {
+    flex: 1; height: 28px; border-radius: 4px;
+    background: rgba(212,168,67,.15); border: 1px solid rgba(212,168,67,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; color: var(--gold-light); transition: background .3s;
+  }
+  .day-pip.active { background: rgba(212,168,67,.35); border-color: rgba(212,168,67,.6); }
+  .day-pip.danger { background: rgba(196,65,90,.35); border-color: var(--rose); color: var(--rose-pale); }
+  .timer-note { font-size: .78rem; color: #c49080; margin-top: .6rem; font-style: italic; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 2rem 1rem;
+    border-top: 1px solid rgba(196,65,90,.2);
+    font-size: .78rem; color: rgba(196,160,168,.4);
+    font-style: italic; position: relative; z-index: 5;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0d0408; }
+  ::-webkit-scrollbar-thumb { background: var(--rose-dark); border-radius: 3px; }
+
+  /* ── Animations ── */
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  .fadein { animation: fadeInUp .7s ease both; }
+
+  @media (max-width: 600px) {
+    .map-bg { grid-template-columns: repeat(2, 1fr); padding: 1rem; min-height: auto; }
+    .chars-grid { grid-template-columns: 1fr; }
+    .node-icon { width: 60px; height: 60px; font-size: 1.6rem; }
+    .node-label { font-size: .7rem; }
+  }
 </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>WORLD MAP: THE POLLUTED LAND</h1>
-    
-    <div class="map-legend">
-        <span>🔴 메인 던전 (재료)</span>
-        <span>🟤 거점 & 휴식</span>
+<!-- Floating hearts -->
+<div class="hearts-bg" id="heartsContainer"></div>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="fadein">
+  <div class="crest">💘</div>
+  <h1>러브 포션 <span>대폭발</span></h1>
+  <p class="subtitle">— 해독제를 만들어라, 그렇지 않으면… 영원한 사랑에 갇히리니 —</p>
+</header>
+
+<div class="container">
+
+  <!-- ═══ TIMER ═══ -->
+  <section class="fadein" style="padding-top:2.5rem;">
+    <div class="timer-section">
+      <div class="timer-label">⏳ 포션 효과 영구화까지 — 9일</div>
+      <div class="timer-days" id="dayPips"></div>
+      <div class="timer-note">* 이 안에 해독제를 완성하지 못하면, 그들의 사랑은… 영원해집니다.</div>
     </div>
 
+    <!-- STAT BARS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">⚠️ 흥분도 (Excitement)</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" id="exciteBar" style="width:32%"></div></div>
+        <div class="stat-value">32 / 100</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🔒 철벽 수치 (Iron Wall)</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill gold-fill" id="wallBar" style="width:78%"></div></div>
+        <div class="stat-value">78 / 100</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🧪 해독제 진행도 (Antidote)</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:0%; background: linear-gradient(90deg,#1a5c3a,#2ecc71,#a8f0c6); box-shadow: 0 0 8px rgba(46,204,113,.5);"></div></div>
+        <div class="stat-value">0 / 4 재료</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ CHARACTER CARDS ═══ -->
+  <section class="fadein">
+    <h2 class="sec-title">등장인물</h2>
+    <div class="chars-grid">
+
+      <!-- VALENTIN -->
+      <div class="char-card">
+        <div class="char-card-accent gold"></div>
+        <div class="char-card-body">
+          <span class="char-emoji">⚔️</span>
+          <div class="char-name">발렌틴 Valentin</div>
+          <div class="char-tag"># 츤데레 순정 짐승남</div>
+          <div class="char-stats">
+            <span class="char-stat-pill">📏 196cm</span>
+            <span class="char-stat-pill">🎂 29세</span>
+            <span class="char-stat-pill">💛 금발</span>
+            <span class="char-stat-pill">💙 푸른 눈</span>
+          </div>
+          <div class="char-quote">"너 때문이 아니라… 확인하러 온 거다!"</div>
+          <ul class="char-desc">
+            <li>매일 아침 연금술사의 집을 찾아오는 앙숙 기사</li>
+            <li>연금술 혐오자 😠 — 하지만 이유는 비밀 🔒</li>
+            <li>포션 영향으로 점점 더 집착(?)하는 중…</li>
+            <li>터질 듯한 근육 💪과 상반된 순정 속내</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- GERARD -->
+      <div class="char-card">
+        <div class="char-card-accent red"></div>
+        <div class="char-card-body">
+          <span class="char-emoji">🩸</span>
+          <div class="char-name">제라드 Gerard</div>
+          <div class="char-tag"># 능글 집착광공</div>
+          <div class="char-stats">
+            <span class="char-stat-pill">📏 203cm</span>
+            <span class="char-stat-pill">🎂 600+세</span>
+            <span class="char-stat-pill">🖤 흑발</span>
+            <span class="char-stat-pill">❤️ 적안</span>
+          </div>
+          <div class="char-quote">"인간? 너 때문에 아직 살려두는 거지."</div>
+          <ul class="char-desc">
+            <li>마계의 절대자 — 하지만 주인공 앞에선 집착 MAX</li>
+            <li>매일 밤 침실 창문으로 자연스럽게 등장 🌙</li>
+            <li>여유로운 미소 뒤에 숨겨진 위험한 계획 🔒</li>
+            <li>기존(?) 계획은 아직 베일에 싸여 있음</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ADONIS -->
+      <div class="char-card">
+        <div class="char-card-accent stone"></div>
+        <div class="char-card-body">
+          <span class="char-emoji">🗿</span>
+          <div class="char-name">아도니스 Adonis</div>
+          <div class="char-tag"># 움직이는 석상(?)</div>
+          <div class="char-stats">
+            <span class="char-stat-pill">📏 3m</span>
+            <span class="char-stat-pill">✨ 완벽 비율</span>
+            <span class="char-stat-pill">🤐 무언</span>
+          </div>
+          <div class="char-quote">…[침묵]… (하지만 존재감은 압도적)</div>
+          <ul class="char-desc">
+            <li>던전 중 랜덤 등장 💎</li>
+            <li>특정 부위를 문지르면(?) 아이템 획득 💰</li>
+            <li>위기 시 소환 → 대신 공격을 맞아주는 탱커로 활용</li>
+            <li>정체는 미지의 비밀 🔒</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PLAYER -->
+      <div class="char-card">
+        <div class="char-card-accent pink"></div>
+        <div class="char-card-body">
+          <span class="char-emoji">🧪</span>
+          <div class="char-name">당신 (플레이어)</div>
+          <div class="char-tag"># 전설의 연금술사</div>
+          <div class="char-stats">
+            <span class="char-stat-pill">💗 페로몬 스킬</span>
+            <span class="char-stat-pill">🔥 S급 실수왕</span>
+          </div>
+          <div class="char-quote">우주 최강 러브 포션을 만들다가… 대폭발.</div>
+          <div class="skill-box">
+            <div class="skill-title">💗 페로몬 스킬 — 포션 기운 방출</div>
+            <div class="skill-effect">
+              ✔ 방어구(옷) 녹이기 🔥<br>
+              ✔ 적을 황홀 상태로 만들어 행동 불능 💫<br>
+              <em style="color:#c49098;font-size:.75rem;">⚠ 밤마다 구애자들과 오래 있으면 해독 연구 지연!</em>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ MAP ═══ -->
+  <section class="fadein">
+    <h2 class="sec-title">세계 지도</h2>
+    <p style="text-align:center;font-size:.85rem;color:#c4a0a8;margin-bottom:1.3rem;font-style:italic;">📍 지역을 클릭하면 상세 정보를 확인할 수 있습니다</p>
     <div class="map-wrapper">
-        <!-- 메인 던전 -->
-        <div class="poi" id="dungeon1" onclick="showDesc('dungeon1')">🧊</div>
-        <div class="poi" id="dungeon2" onclick="showDesc('dungeon2')">⛪</div>
-        <div class="poi" id="dungeon3" onclick="showDesc('dungeon3')">🌿</div>
-        <div class="poi" id="dungeon4" onclick="showDesc('dungeon4')">🔥</div>
-        
-        <!-- 추가 장소 -->
-        <div class="poi" id="home" onclick="showDesc('home')">🏠</div>
-        <div class="poi" id="spa" onclick="showDesc('spa')">⛲</div>
-        <div class="poi" id="buffet" onclick="showDesc('buffet')">🍷</div>
-    </div>
+      <div class="map-bg">
 
-    <div id="desc-panel">
-        <span id="desc-title" class="desc-title">장소를 선택하십시오</span>
-        <div id="desc-body" class="desc-body">지도의 아이콘을 클릭하면 해당 지역의 상세 정보와 획득 가능한 전리품이 표시됩니다.</div>
+        <!-- ICE CAVE -->
+        <div class="map-node node-ice" onclick="openModal('ice')">
+          <div class="node-icon">🧊<div class="node-ring"></div></div>
+          <div class="node-label">냉소의 얼음 동굴</div>
+          <div class="node-sublabel">재료: 결빙된 심장</div>
+        </div>
+
+        <!-- ABBEY -->
+        <div class="map-node node-abbey" onclick="openModal('abbey')">
+          <div class="node-icon">⛪<div class="node-ring"></div></div>
+          <div class="node-label">금욕의 수도원</div>
+          <div class="node-sublabel">재료: 순결의 소금</div>
+        </div>
+
+        <!-- DARK CASTLE -->
+        <div class="map-node node-castle" onclick="openModal('castle')">
+          <div class="node-icon">🔥<div class="node-ring"></div></div>
+          <div class="node-label">타락한 마왕성</div>
+          <div class="node-sublabel">재료: 심연의 불꽃</div>
+        </div>
+
+        <!-- FOREST -->
+        <div class="map-node node-forest" onclick="openModal('forest')">
+          <div class="node-icon">🌿<div class="node-ring"></div></div>
+          <div class="node-label">몽환의 덩굴 숲</div>
+          <div class="node-sublabel">재료: 금단의 꿀</div>
+        </div>
+
+        <!-- KNIGHT FORTRESS -->
+        <div class="map-node node-knight" onclick="openModal('knight')">
+          <div class="node-icon">🏰<div class="node-ring"></div></div>
+          <div class="node-label">발렌틴의 짐승 성채</div>
+          <div class="node-sublabel">푸른 기사단 성</div>
+        </div>
+
+        <!-- TOWN -->
+        <div class="map-node node-town" onclick="openModal('town')">
+          <div class="node-icon">🏘️<div class="node-ring"></div></div>
+          <div class="node-label">마을 (기타 장소)</div>
+          <div class="node-sublabel">3곳의 특수 장소</div>
+        </div>
+
+        <div class="compass">🧭</div>
+      </div>
     </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ ITEMS ═══ -->
+  <section class="fadein">
+    <h2 class="sec-title">일시적 억제제 & 던전 보상</h2>
+    <div class="items-grid">
+      <div class="item-card">
+        <span class="item-icon">💊</span>
+        <div class="item-name">일시적 억제제</div>
+        <div class="item-desc">던전 진입 필수 아이템. 재료 부족으로 항상 페널티가 존재합니다. 완벽한 억제제는 만들 수 없다는 게 함정.</div>
+      </div>
+      <div class="item-card">
+        <span class="item-icon">🧊</span>
+        <div class="item-name">빙하의 드레스</div>
+        <div class="item-desc">얼음 동굴 클리어 보상. 냉기를 머금은 신비로운 드레스. 착용 시 특정 효과 발동.</div>
+      </div>
+      <div class="item-card">
+        <span class="item-icon">🖤</span>
+        <div class="item-name">타락한 수도복</div>
+        <div class="item-desc">금욕의 수도원 클리어 보상. 금욕의 의미가 완전히 뒤집힌 문제의 복장.</div>
+      </div>
+      <div class="item-card">
+        <span class="item-icon">🌿</span>
+        <div class="item-name">덩굴 비키니</div>
+        <div class="item-desc">몽환의 덩굴 숲 클리어 보상. 자연의 기운을 담은 위험한 의상. ⚠️ 착용 주의.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ WARNINGS ═══ -->
+  <section class="fadein">
+    <h2 class="sec-title">⚠️ 주요 경고</h2>
+    <div style="display:grid;gap:1rem;">
+      <div class="warning-box">
+        <div class="warning-icon">💥</div>
+        <div>
+          <div class="warning-title">흥분도 100% → GAME OVER</div>
+          <div class="warning-text">던전 안에서 흥분도가 100%에 도달하면 모든 것을 잊고 GAME OVER 💋 도입부로 되돌아갑니다. 구애 및 스킨십 발생 시 수치가 상승하며, 수치가 높을수록 적의 '유혹 공격'이 강화됩니다.</div>
+        </div>
+      </div>
+      <div class="warning-box">
+        <div class="warning-icon">💍</div>
+        <div>
+          <div class="warning-title">철벽 수치 0% → 결혼 엔딩</div>
+          <div class="warning-text">구애에 대한 당신의 반응에 따라 철벽 수치가 변화합니다. 특정 캐릭터와의 철벽 수치가 0에 도달하는 순간… ??? 결혼 엔딩이 발동됩니다.</div>
+        </div>
+      </div>
+      <div class="warning-box">
+        <div class="warning-icon">🌙</div>
+        <div>
+          <div class="warning-title">밤의 방문자</div>
+          <div class="warning-text">밤마다 찾아오는 구애자들과 오래 시간을 보내면 해독 연구가 지연됩니다. 9일이라는 제한 시간을 잊지 마세요!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ SECRETS ═══ -->
+  <section class="fadein">
+    <h2 class="sec-title">🔒 숨겨진 비밀</h2>
+    <div class="secrets-grid">
+      <div class="secret-card">
+        <span class="secret-icon">⚔️</span>
+        <div class="secret-label">발렌틴의 비밀</div>
+        <div class="secret-text">그가 연금술을 싫어하는 이유. 과거에 무슨 일이 있었던 것일까…?</div>
+      </div>
+      <div class="secret-card">
+        <span class="secret-icon">🩸</span>
+        <div class="secret-label">제라드의 계획</div>
+        <div class="secret-text">마왕이 처음부터 품고 있던 '기존(?) 계획'의 정체. 포션 이전부터 목적이 있었던 걸까?</div>
+      </div>
+      <div class="secret-card">
+        <span class="secret-icon">🗿</span>
+        <div class="secret-label">아도니스의 정체</div>
+        <div class="secret-text">그는 정말 단순한 석상인가? 어떻게 움직이는 것인가. 그의 과거는?</div>
+      </div>
+      <div class="secret-card">
+        <span class="secret-icon">🔞</span>
+        <div class="secret-label">숨겨진 취향</div>
+        <div class="secret-text">특정 루트와 선택지를 통해서만 해금됩니다. 🔞🔞 — 자세한 내용은 직접 플레이로 확인.</div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  ✦ 사랑이냐, 생존이냐 ✦ — 유혹을 이용해 돌파할 것인가, 아니면 도망칠 것인가? 당신의 선택에 모든 것이 달려 있습니다 ⚔️
+</footer>
+
+<!-- ═══════════════════════ MODALS ═══════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modalContent"></div>
 </div>
 
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
 <script>
-    const data = {
-        dungeon1: {
-            title: "🧊 냉소의 얼음 동굴",
-            body: "보스: 얼음 정령 왕 프로스트. 차가운 냉기가 지배하던 곳이나 지금은 정령들이 열기에 신음하고 있습니다. <br><b>목표:</b> 결빙된 심장 탈취. <br><b>전리품:</b> 빙하의 드레스 (착용 시 민감도 감소)."
-        },
-        dungeon2: {
-            title: "⛪ 금욕의 수도원",
-            body: "보스: 대수도원장 베네딕토. 40년간 금욕한 성직자들이 당신의 '발소리'만으로도 자지러집니다. <br><b>목표:</b> 순결의 소금 획득. <br><b>전리품:</b> 타락한 수도복 (유혹 스킬 위력 대폭 증가)."
-        },
-        dungeon3: {
-            title: "🌿 몽환의 덩굴 숲",
-            body: "보스: 숲의 여왕 알라우네. 숲 전체가 거대한 자궁처럼 맥동합니다. 촉수들이 당신의 옷을 녹이려 달려듭니다. <br><b>목표:</b> 금단의 꿀 채취. <br><b>전리품:</b> 덩굴 비키니 (방어력은 낮으나 매력 수치 극대화)."
-        },
-        dungeon4: {
-            title: "🔥 타락한 마왕성",
-            body: "보스: 마왕 제라드. 마왕의 권태를 끝낼 유일한 제물로 당신을 기다립니다. <br><b>목표:</b> 심연의 불꽃 획득. <br><b>전리품:</b> 마왕비의 관 (마왕의 구속에서 자유로워짐)."
-        },
-        home: {
-            title: "🏠 연금술사의 공방 (거점)",
-            body: "당신의 안식처이자 해독제 연구소. 밤마다 발렌틴이나 제라드가 침입할 수 있으니 주의하십시오. 연구 진행률을 높일 수 있는 유일한 장소입니다."
-        },
-        spa: {
-            title: "⛲ 타락한 성녀의 온천",
-            body: "미끈거리는 점액질 온천수가 흐르는 곳. 흥분도를 낮출 수 있지만, 무방비한 상태에서 누군가와 조우할 확률이 매우 높습니다."
-        },
-        buffet: {
-            title: "🍷 심야의 타락 뷔페 '라스트 러브'",
-            body: "모든 음식이 최음 효과를 가집니다. 일시적인 스태미나 상승 버프를 주지만, 랜덤하게 '의상 소멸' 등의 부작용이 뒤따릅니다."
-        }
-    };
+  /* ── Floating hearts ── */
+  const hc = document.getElementById('heartsContainer');
+  const symbols = ['💘','💗','💖','💕','❤️','🌹','✨','💫'];
+  for (let i = 0; i < 20; i++) {
+    const h = document.createElement('div');
+    h.className = 'hb';
+    h.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    h.style.cssText = `left:${Math.random()*100}%;--dur:${7+Math.random()*8}s;--delay:${Math.random()*10}s;--rot:${-20+Math.random()*40}deg;font-size:${.9+Math.random()*1.2}rem;`;
+    hc.appendChild(h);
+  }
 
-    function showDesc(id) {
-        document.getElementById('desc-title').innerHTML = data[id].title;
-        document.getElementById('desc-body').innerHTML = data[id].body;
+  /* ── Day pips ── */
+  const dp = document.getElementById('dayPips');
+  for (let i = 1; i <= 9; i++) {
+    const p = document.createElement('div');
+    p.className = 'day-pip' + (i <= 2 ? ' active' : '') + (i >= 8 ? ' danger' : '');
+    p.textContent = `D${i}`;
+    dp.appendChild(p);
+  }
+
+  /* ── Modal data ── */
+  const LOCATIONS = {
+    ice: {
+      icon: '🧊', title: '냉소의 얼음 동굴',
+      subtitle: '가장 냉혹했던 정령들조차 흔들린 곳',
+      tags: [['danger','던전'], ['info','보스 유혹 필수']],
+      sections: [
+        { title: '분위기', text: '모든 것을 얼어붙게 하는 극한의 한기가 가득한 동굴. 한때 가장 냉혹한 정령들이 지배하던 곳이었으나, 포션 폭발 이후 그들조차 사랑에 흔들리기 시작했다. 벽면에 핑크빛 성에가 자라나고 있다.' },
+        { title: '공략 방법', text: '보스 정령을 유혹하여 심장을 얻어야 합니다. 냉기에 저항할 억제제를 충분히 준비하고 입장할 것. 흥분도 관리에 각별한 주의가 필요한 던전.' },
+      ],
+      ingredient: { icon: '❄️', label: '결빙된 심장', desc: '보스를 유혹해 획득. 해독제의 핵심 재료 중 하나.' },
+      reward: { icon: '👗', label: '빙하의 드레스', desc: '냉기를 머금은 신비로운 보상 의상' },
+    },
+    abbey: {
+      icon: '⛪', title: '금욕의 수도원',
+      subtitle: '욕망을 거부하던 자들의 최후의 보루',
+      tags: [['danger','던전'], ['purple','잠입 권장']],
+      sections: [
+        { title: '분위기', text: '한때 욕망과 세속의 모든 것을 거부하며 신께 헌신하던 수도사들의 성지. 포션 폭발 이후 절제를 가르치던 자들마저 흔들리고 있다. 성수반에는 분홍빛 물이 고여 있다.' },
+        { title: '공략 방법', text: '절제의 방 깊숙이 숨겨진 성물을 찾아야 합니다. 겉으로는 경건한 척 행동하며 수도사들의 경계를 피해야 하지만, 포션 기운이 퍼져 있어 그것도 쉽지 않습니다.' },
+      ],
+      ingredient: { icon: '🧂', label: '순결의 소금', desc: '절제의 방 깊숙이 숨겨진 성물' },
+      reward: { icon: '🖤', label: '타락한 수도복', desc: '금욕의 의미가 완전히 뒤집힌 문제의 복장' },
+    },
+    forest: {
+      icon: '🌿', title: '몽환의 덩굴 숲',
+      subtitle: '모든 식물이 사랑에 미쳐버린 위험지대',
+      tags: [['danger','던전'], ['nature','식물 주의']],
+      sections: [
+        { title: '분위기', text: '포션 폭발 이후 숲의 모든 식물이 사랑에 미쳐버렸다. 덩굴은 지나가는 자를 붙잡고, 꽃들은 달콤한 향을 내뿜어 정신을 흐리게 한다. 핑크빛 안개가 시야를 가린다.' },
+        { title: '공략 방법', text: '식인꽃의 입속으로 들어가 금단의 꿀을 획득해야 합니다. 꽃의 덩굴에 붙잡히면 흥분도가 급격히 상승하므로 페로몬 스킬로 선제 교란을 권장.' },
+      ],
+      ingredient: { icon: '🍯', label: '금단의 꿀', desc: '식인꽃의 입속에서 획득 가능' },
+      reward: { icon: '🌿', label: '덩굴 비키니', desc: '자연의 기운을 담은 위험한 의상 ⚠️' },
+    },
+    castle: {
+      icon: '🔥', title: '타락한 마왕성',
+      subtitle: '가장 위험한 \'데이트 장소\'',
+      tags: [['danger','최고 난이도'], ['danger','제라드 본거지']],
+      sections: [
+        { title: '분위기', text: '마계의 절대자 제라드의 본거지. 마왕성 전체가 붉은 불꽃과 어둠으로 가득하지만, 포션 폭발 이후 곳곳에 하트 모양의 장식이 생겨났다. 가장 위험하지만 제라드와의 거리가 가장 가까운 곳.' },
+        { title: '공략 방법', text: '마왕의 침실에서 심연의 불꽃을 가져와야 합니다. 제라드가 매일 밤 침실에 방문하는 만큼, 성 안에서 마주칠 확률이 매우 높습니다. 집착도 관리에 각별히 주의.' },
+      ],
+      ingredient: { icon: '🔥', label: '심연의 불꽃', desc: '마왕의 침실에서 가져와야 하는 최고 위험 재료' },
+      reward: { icon: '😏', label: '제라드의 집착 MAX', desc: '이 던전을 클리어하면 제라드의 태도가 변화합니다' },
+    },
+    knight: {
+      icon: '🏰', title: '발렌틴의 짐승 성채',
+      subtitle: '구 \'푸른 기사단 성\'',
+      tags: [['info','일반 장소'], ['gold','발렌틴 전용']],
+      sections: [
+        { title: '현재 상태', text: '엄격했던 기사단의 성이었으나, 포션 폭발 이후 성벽 곳곳에 하트 문양이 새겨지고 연병장은 주인공을 위한 꽃밭으로 바뀌었습니다.' },
+        { title: '특징', text: '기사들이 매일 아침 주인공에게 바칠 프러포즈 훈련을 합니다. 방문 시마다 발렌틴의 강제 검문 이벤트를 버텨야 합니다. 검문 시 철벽 수치와 흥분도 변동 발생.' },
+        { title: '발렌틴과의 이벤트', text: '"너 때문이 아니라… 확인하러 온 거다!" 매일 아침 찾아오는 그를 어떻게 대하느냐에 따라 철벽 수치가 달라집니다. 츤데레 루트의 핵심 장소.' },
+      ],
+      ingredient: null,
+      reward: { icon: '⚔️', label: '강제 검문 이벤트', desc: '방문마다 발렌틴과의 특수 이벤트 발생' },
+    },
+    town: {
+      icon: '🏘️', title: '마을 특수 장소',
+      subtitle: '포션에 물든 마을 속의 3곳',
+      tags: [['gold','마을 내'], ['info','버프 & 디버프 혼재']],
+      sections: [
+        {
+          title: '🍽️ 심야의 타락 뷔페 \'라스트 러브\'',
+          text: '마을의 유일한 식당이 포션에 물들었습니다. 모든 음식이 핑크색이거나 하트 모양 (핑크 크림 파스타, 하트 스테이크). 섭취 시 특수 버프 획득, 하지만 랜덤하게 \'포션 부작용\' 상태 이상에 걸립니다. 주방장마저 요리와 사랑에 빠진 상태.'
+        },
+        {
+          title: '🌙 마왕의 텔레포트 게이트',
+          text: '장소라기보단, 제라드가 임의로 지정한 주인공과의 은밀한 연결 통로 — 침실 창문. 밤만 되면 창문을 통해 마계의 눅진하고 위험한 공기가 들어옵니다. 제라드의 매일 밤 방문 경로.'
+        },
+        {
+          title: '♨️ 타락한 성녀의 온천',
+          text: '원래는 경건한 치유의 성수(聖水)가 솟던 곳. 분홍 안개와 만나 미끈거리고 뜨거운 수면욕·식욕·성욕을 자극하는 점액질 온천이 되었습니다. 몽환적인 핑크빛 증기와 하트 모양 이끼가 특징. 입욕 시 효과는… 직접 확인하세요.'
+        },
+      ],
+      ingredient: null,
+      reward: { icon: '🌸', label: '다양한 버프/디버프', desc: '각 장소마다 특수 효과 발동 (복불복)' },
+    },
+  };
+
+  function openModal(key) {
+    const d = LOCATIONS[key];
+    let html = `
+      <div class="modal-header">
+        <div class="modal-icon">${d.icon}</div>
+        <div class="modal-title-block">
+          <div class="modal-title">${d.title}</div>
+          <div class="modal-subtitle">${d.subtitle}</div>
+          <div style="margin-top:.5rem;">
+            ${d.tags.map(([cls,txt])=>`<span class="modal-tag ${cls}">${txt}</span>`).join('')}
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+    `;
+
+    if (d.ingredient) {
+      html += `
+        <div class="modal-section">
+          <div class="modal-section-title">필요 재료</div>
+          <div class="modal-ingredient">
+            <div class="modal-ingredient-icon">${d.ingredient.icon}</div>
+            <div class="modal-ingredient-text">
+              <div class="modal-ingredient-label">${d.ingredient.label}</div>
+              <div class="modal-ingredient-sub">${d.ingredient.desc}</div>
+            </div>
+          </div>
+        </div>
+      `;
     }
-</script>
 
+    d.sections.forEach(s => {
+      html += `
+        <div class="modal-section">
+          <div class="modal-section-title">${s.title}</div>
+          <div class="modal-text">${s.text}</div>
+        </div>
+      `;
+    });
+
+    if (d.reward) {
+      html += `
+        <div class="modal-section">
+          <div class="modal-section-title">보상</div>
+          <div class="modal-reward">
+            <div class="modal-reward-icon">${d.reward.icon}</div>
+            <div class="modal-reward-text">
+              <div class="modal-reward-label">${d.reward.label}</div>
+              <div class="modal-reward-sub">${d.reward.desc}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
 </body>
 </html>
