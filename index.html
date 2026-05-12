@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Nanum+Myeongjo:wght@400;700&display=swap');
+
+    body {
+        background: #1a0f0f;
+        color: #e0c39a;
+        font-family: 'Nanum+Myeongjo', serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .game-container {
+        width: 100%;
+        max-width: 800px;
+        background: #2d1b1b;
+        border: 4px double #8b5a2b;
+        padding: 30px;
+        box-shadow: 0 0 50px rgba(255, 20, 147, 0.2);
+    }
+
+    h1 {
+        font-family: 'Cinzel', serif;
+        text-align: center;
+        color: #ff1493;
+        text-shadow: 2px 2px 4px #000;
+        border-bottom: 2px solid #8b5a2b;
+        padding-bottom: 10px;
+    }
+
+    .intro {
+        text-align: center;
+        font-style: italic;
+        margin-bottom: 30px;
+        line-height: 1.8;
+    }
+
+    .location-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .location-card {
+        background: #3d2626;
+        border: 1px solid #5d3a3a;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .location-card:hover {
+        background: #5d3a3a;
+        border-color: #ff1493;
+        transform: translateY(-2px);
+    }
+
+    .location-card h3 {
+        color: #f39c12;
+        margin-top: 0;
+        font-family: 'Cinzel', serif;
+    }
+
+    .location-card p {
+        font-size: 0.9em;
+        line-height: 1.5;
+        color: #d2b48c;
+    }
+
+    .status-window {
+        background: #1e1111;
+        border: 1px solid #ff1493;
+        padding: 15px;
+        margin-top: 25px;
+        font-size: 0.85em;
+    }
+
+    .character-info {
+        margin-top: 20px;
+        border-top: 1px solid #8b5a2b;
+        padding-top: 15px;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #ff1493;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        margin-right: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>NEO-ALCHEMY: PINK DISASTER</h1>
+    
+    <p class="intro">
+        "연금술사여, 당신의 솥에서 피어오른 분홍빛 연기가 세상을 뒤바꿨습니다.<br>
+        무생물조차 열기로 헐떡이는 이 타락한 세계에서 9일 안에 해독제를 완성하십시오.<br>
+        그렇지 않으면 당신은 영원히 이 '사랑의 노예'가 될 것입니다."
+    </p>
+
+    <div class="location-grid">
+        <div class="location-card">
+            <h3>🛡️ 발렌틴의 짐승 성채</h3>
+            <p>엄격했던 기사단은 사라졌습니다. 이제 이곳은 기사들의 거친 숨소리와 꽃향기로 가득합니다. 입장 시 기사단장의 '심층 수색'이 기다립니다.</p>
+            <span class="tag">강제 검문</span><span class="tag">근육질 기사</span>
+        </div>
+        <div class="location-card">
+            <h3>🍷 라스트 러브 뷔페</h3>
+            <p>모든 음식이 분홍색 점액질로 변했습니다. 끈적한 스테이크를 한 입 베어 무는 순간, 당신의 이성은 연기처럼 증발할지도 모릅니다.</p>
+            <span class="tag">특수 버프</span><span class="tag">랜덤 부작용</span>
+        </div>
+        <div class="location-card">
+            <h3>⛲ 타락한 성녀의 온천</h3>
+            <p>피부 사이를 파고드는 눅진한 온천수는 성욕을 물리적으로 자극합니다. 증기 속에 숨은 누군가가 당신의 젖은 몸을 노리고 있습니다.</p>
+            <span class="tag">흥분도 조절</span><span class="tag">야외 이벤트</span>
+        </div>
+        <div class="location-card">
+            <h3>🌑 마왕의 게이트</h3>
+            <p>당신의 침실 창문으로 연결된 불길한 통로. 밤마다 찾아오는 마왕 제라드의 은밀하고도 가학적인 유혹을 견뎌내야 합니다.</p>
+            <span class="tag">밤의 방문자</span><span class="tag">도덕성 시험</span>
+        </div>
+    </div>
+
+    <div class="character-info">
+        <h2 style="color: #ff1493; font-family: 'Cinzel';">THE OBSESSORS</h2>
+        <p><strong>발렌틴:</strong> 196cm의 거구 기사. 연금술을 경멸하면서도 당신 앞에선 짐승처럼 달궈집니다. (M/Dom)</p>
+        <p><strong>제라드:</strong> 203cm의 권태로운 마왕. 당신의 수치심을 즐기며 마력으로 구속하는 것을 좋아합니다. (S/Dom)</p>
+        <p><strong>아도니스:</strong> 300cm의 살아난 석상. 거대한 대리석 몸으로 당신을 안아주며 '사랑'을 묻습니다. (Blank)</p>
+    </div>
+
+    <div class="status-window">
+        [ SYSTEM ] <br>
+        - 억제제 부작용: 10분간 의복 착용 불가, 교태스러운 목소리 등 랜덤 부여.<br>
+        - 전투: 죽음이 아닌 '절정'을 통한 만족이 승리 조건.<br>
+        - 게임 오버: 던전 내 흥분도 100% 도달 시 도입부로 회귀.
+    </div>
+</div>
+
+</body>
+</html>
